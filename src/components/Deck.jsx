@@ -23,7 +23,6 @@ function Deck() {
     }
 
     const deck = freshDeck();
-    console.log(deck);
 
    function shuffleDeck(deck) {
         for(let i = deck.length - 1; i > 0; i--){
@@ -36,6 +35,7 @@ function Deck() {
     }
 
    function dealCards(deck) {
+    shuffleDeck(deck)
     const pHand = [];
     const cHand = [];
         for(let i = deck.length -1; i > 39; i-=2) {
@@ -49,14 +49,11 @@ function Deck() {
     }
     return (
       <>
-        <button onClick={() => shuffleDeck(deck)}>
-            Shuffle Deck
-        </button>
+        <Hand cards={playerHand} />
+        <Hand cards={compHand} />
         <button onClick={() => dealCards(deck)}>
             Deal Deck
         </button>
-        <Hand cards={playerHand} />
-        <Hand cards={compHand} />
       </>
     );
   }
