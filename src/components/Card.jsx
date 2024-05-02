@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import styles from './Card.module.css';
 
-function Card(value, suit) {
-    
+function Card({ rank, value, suit }) {
+
+  function getSuitIcon(suit) {
+    switch (suit) {
+      case 'spades':
+        return '♠'; // Description or action for Spades
+      case 'hearts':
+        return '♥';
+      case 'diamonds':
+        return '♦';
+      case 'clubs':
+        return '♣';
+      default:
+        return 'Unknown suit'; // Fallback for unknown cases
+    }
+  }
+
     return (
-      <>
-        <h1>About</h1>
-        <p>Hello there.<br />How do you do?</p>
-      </>
+    <div className={`${styles.card} ${styles[suit]}`}>
+      <div className={styles.rankTop}>{rank}</div>
+      <div className={styles.suitTop}>{getSuitIcon(suit)}</div> 
+
+      <div className={styles.centerSuit}>{getSuitIcon(suit)}</div>
+      <div className={styles.rankBottom}>{rank}</div>
+      <div className={styles.suitBottom}>{getSuitIcon(suit)}</div> 
+    </div>
     );
   }
 

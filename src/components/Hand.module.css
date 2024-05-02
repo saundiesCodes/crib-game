@@ -1,0 +1,7 @@
+.hand {
+    display: flex; /* Use flexbox for row layout */
+    flex-direction: row; /* Ensure elements are aligned horizontally */
+    justify-content: flex-start; /* Align items to the start of the row */
+    align-items: center; /* Vertically center items in the row */
+    gap: 10px; /* Optional: space between cards */
+  }

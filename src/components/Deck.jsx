@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import Hand from "./Hand";
+import Card from "./Card";
 
 function Deck() {
+    const [playerHand, setPlayerHand] = useState([]);
+    const [compHand, setCompHand] = useState([]);
 
     const FACEVALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
@@ -11,7 +15,7 @@ function Deck() {
             return FACEVALUES.map(faceValue => {
                 const cardObj = { 
                     suit,
-                    faceValue
+                    rank: faceValue
                 }
                 return cardObj;
             })
@@ -32,18 +36,16 @@ function Deck() {
     }
 
    function dealCards(deck) {
-        let playerHand = [];
-        let compHand = [];
+    const pHand = [];
+    const cHand = [];
         for(let i = deck.length -1; i > 39; i-=2) {
-            playerHand.push(deck[i]);
+            pHand.push(deck[i]);
             deck.pop();
-            compHand.push(deck[(i-1)]);
+            cHand.push(deck[(i-1)]);
             deck.pop();
         }
-        console.log("Player's hand is: ");
-        console.log(playerHand);
-        console.log("Computer's Hand is: ");
-        console.log(compHand);
+        setPlayerHand(pHand);
+        setCompHand(cHand);
     }
     return (
       <>
@@ -53,6 +55,8 @@ function Deck() {
         <button onClick={() => dealCards(deck)}>
             Deal Deck
         </button>
+        <Hand cards={playerHand} />
+        <Hand cards={compHand} />
       </>
     );
   }

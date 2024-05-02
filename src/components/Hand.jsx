@@ -1,12 +1,15 @@
 import React from "react";
+import Card from "./Card";
+import styles from "./Hand.module.css"
 
-function Hand(cards) {
-    
+function Hand({cards}) {
+    // console.log(cards);
     return (
-      <>
-        <h1>About</h1>
-        <p>Hello there.<br />How do you do?</p>
-      </>
+    <div className={styles.hand}>
+      {cards.map((card, index) => (
+        <Card key={index} suit={card.suit} rank={card.rank} />
+      ))}
+    </div>
     );
   }
 

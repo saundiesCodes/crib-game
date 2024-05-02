@@ -1,0 +1,63 @@
+        /* Container for the card */
+        .card {
+            width: 100px; /* Fixed width for uniformity */
+            height: 140px; /* Fixed height for uniformity */
+            border-radius: 10px; /* Rounded corners */
+            border: 2px solid #333; /* Border around the card */
+            background-color: white; /* Card background */
+            position: relative; /* Positioning context for inner elements */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        }
+
+        /* Positioning the rank (number or letter) in the top-left corner */
+        .card .rankTop {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Positioning the suit in the top-left corner */
+        .card .suitTop {
+            position: absolute;
+            top: 20px;
+            left: 9px;
+            font-size: 16px;
+        }
+
+        .card .rankBottom {
+            position: absolute;
+            bottom: 5px; /* Adjust as needed */
+            right: 5px; /* Adjust as needed */
+            font-size: 16px;
+            font-weight: bold;
+            transform: rotate(180deg); /* Flips the text upside down */
+        }
+        
+        /* Positioning the suit in the bottom-right corner and flipping it */
+        .card .suitBottom {
+            position: absolute;
+            bottom: 20px; /* Adjust as needed */
+            right: 9px; /* Adjust as needed */
+            font-size: 16px;
+            transform: rotate(180deg); /* Flips the text upside down */
+        }
+
+        /* Positioning the suit in the center of the card */
+        .card .centerSuit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center align */
+            font-size: 40px; /* Larger font size for the central suit */
+        }
+
+        /* Styling for different suits */
+        .hearts, .diamonds {
+            color: red; /* Hearts and Diamonds are red */
+        }
+
+        .spades, .clubs {
+            color: black; /* Spades and Clubs are black */
+        }
