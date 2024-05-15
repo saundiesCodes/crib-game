@@ -1,0 +1,20 @@
+.deckContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    border: 5px solid black;
+}
+
+.compHand {
+    margin-top: 20px;
+}
+
+.playerHand {
+    margin-bottom: 20px;
+}
+
+.buttonContainer {
+    margin-top: auto;
+    margin-bottom: auto;
+}

@@ -1,10 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
-import Deck from './components/Deck';
+import Board from './components/Board';
 
 function App() {
   return (
-    <Deck />
+    <Board />
   );
 }
 

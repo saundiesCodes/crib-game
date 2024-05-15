@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Hand from "./Hand";
-import Card from "./Card";
+import styles from "./Deck.module.css"
 
 function Deck() {
     const [playerHand, setPlayerHand] = useState([]);
@@ -48,14 +48,18 @@ function Deck() {
         setCompHand(cHand);
     }
     return (
-      <>
-        <Hand cards={playerHand} />
-        <Hand cards={compHand} />
-        <button onClick={() => dealCards(deck)}>
-            Deal Deck
-        </button>
-      </>
+        <div className={styles.deckContainer}>
+            <div className={styles.compHand}>
+                <Hand cards={compHand} />
+            </div>
+            <div className={styles.buttonContainer}>
+                <button onClick={() => dealCards(deck)}>Deal Deck</button>
+            </div>
+            <div className={styles.playerHand}>
+                <Hand cards={playerHand} />
+            </div>
+        </div>
     );
-  }
+}
 
   export default Deck;
