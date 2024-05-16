@@ -1,21 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import Hand from "./Hand";
+import Card from "./Card";
 import styles from "./Deck.module.css"
 
 function Deck() {
     const [playerHand, setPlayerHand] = useState([]);
     const [compHand, setCompHand] = useState([]);
+    const [hasBeenDealt, setHasBeenDealt] = useState(false);
+    const [cutCard, setCutCard] = useState({});
 
     const FACEVALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
+    const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     const SUITS = ["spades", "diamonds", "clubs", "hearts"];
+
+    useEffect(() => {
+        console.log(cutCard);
+      }, [cutCard])
+
+    const getValue = (faceValue) => { 
+        switch(faceValue){ 
+            case "A": 
+                return 1;
+            case "10":
+            case "J":
+            case "Q":
+            case "K":
+                return 10;
+            default: 
+                return parseInt(faceValue);
+        }
+    }
+    
 
     function freshDeck() {
         return SUITS.flatMap(suit => {
             return FACEVALUES.map(faceValue => {
                 const cardObj = { 
                     suit,
-                    rank: faceValue
+                    rank: faceValue,
+                    value: getValue(faceValue)
                 }
                 return cardObj;
             })
@@ -46,15 +69,31 @@ function Deck() {
         }
         setPlayerHand(pHand);
         setCompHand(cHand);
+        const cut = cutDeck(deck);
+        setCutCard(cut);
+        setHasBeenDealt(true);
+    }
+
+    function cutDeck(deck){ 
+       const cutIndex = Math.floor(Math.random() * deck.length);
+       return deck[cutIndex];
+       
     }
     return (
         <div className={styles.deckContainer}>
             <div className={styles.compHand}>
                 <Hand cards={compHand} />
             </div>
+            {!hasBeenDealt && 
             <div className={styles.buttonContainer}>
                 <button onClick={() => dealCards(deck)}>Deal Deck</button>
             </div>
+            }
+            {hasBeenDealt && 
+            <   div className={styles.cutCard}>
+                    <Card suit={cutCard.suit} rank={cutCard.rank} />
+                </div>
+            }
             <div className={styles.playerHand}>
                 <Hand cards={playerHand} />
             </div>

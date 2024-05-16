@@ -61,3 +61,8 @@
         .spades, .clubs {
             color: black; /* Spades and Clubs are black */
         }
+
+        .selected {
+            background-color: #ccc; /* Gray background to indicate selection */
+            transform: translateY(-10px); /* Move the card slightly above */
+          }
