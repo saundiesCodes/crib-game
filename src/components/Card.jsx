@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from './Card.module.css';
 
-function Card({ rank, value, suit }) {
+function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached }) {
   const [selected, setSelected] = useState(false);
 
   function getSuitIcon(suit) {
@@ -19,14 +19,32 @@ function Card({ rank, value, suit }) {
     }
   }
 
-  const handleSelect = () => {
-    setSelected(!selected);
+  // useEffect(() => {
+  //   console.log(selectLimitReached)
+  // }, [selectLimitReached]);
+
+  const handleSelectInternal = () => {
+    const card = {
+      rank,
+      value,
+      suit
+    }
+
+    if(!selectedLimitReached && !selected){
+      setSelected(true);
+      handleSelectExternal(card);
+    }
+
+    if((!selectedLimitReached && selected) || (selectedLimitReached && selected)){ 
+      setSelected(false);
+      handleSelectExternal(card);
+    }
   };
 
   return (
     <div
-      className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : ''}`}
-      onClick={handleSelect}
+      className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : styles.unselected}`}
+      onClick={handleSelectInternal}
     >
       <div className={styles.rankTop}>{rank}</div>
       <div className={styles.suitTop}>{getSuitIcon(suit)}</div>
