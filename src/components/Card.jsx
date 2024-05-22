@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from './Card.module.css';
 
-function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached }) {
+function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, handOwner }) {
   const [selected, setSelected] = useState(false);
 
   function getSuitIcon(suit) {
@@ -24,6 +24,8 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached })
   // }, [selectLimitReached]);
 
   const handleSelectInternal = () => {
+
+    if(handOwner === 'Player'){
     const card = {
       rank,
       value,
@@ -38,6 +40,7 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached })
     if((!selectedLimitReached && selected) || (selectedLimitReached && selected)){ 
       setSelected(false);
       handleSelectExternal(card);
+    }
     }
   };
 

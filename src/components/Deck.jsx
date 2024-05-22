@@ -13,10 +13,6 @@ function Deck() {
     const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     const SUITS = ["spades", "diamonds", "clubs", "hearts"];
 
-    useEffect(() => {
-        console.log(cutCard);
-      }, [cutCard])
-
     const getValue = (faceValue) => { 
         switch(faceValue){ 
             case "A": 
@@ -54,7 +50,6 @@ function Deck() {
             deck[newIndex] = deck[i];
             deck[i] = oldValue;
         }
-        console.log("SHUFFLED DECK", deck);
     }
 
    function dealCards(deck) {
@@ -67,8 +62,21 @@ function Deck() {
             cHand.push(deck[(i-1)]);
             deck.pop();
         }
-        setPlayerHand(pHand);
-        setCompHand(cHand);
+
+        let updatedpHand = pHand.map(card => {
+            card.handOwner = "Player"; 
+            return card;
+        });
+
+        let updatedcHand = cHand.map(card => {
+            card.handOwner = "Comp"; 
+            return card;
+        });
+
+        console.log("PLAYER HAND", pHand);
+
+        setPlayerHand(updatedpHand);
+        setCompHand(updatedcHand);
         const cut = cutDeck(deck);
         setCutCard(cut);
         setHasBeenDealt(true);

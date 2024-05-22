@@ -49,6 +49,7 @@ function Hand({cards}) {
         rank={card.rank} 
         handleSelectExternal={handleSelectedCardExternal}
         selectedLimitReached={selectedLimitReached}
+        handOwner={card.handOwner}
         />
       ))}
     </div>
