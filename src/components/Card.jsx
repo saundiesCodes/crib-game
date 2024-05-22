@@ -44,7 +44,7 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
     }
   };
 
-  return (
+  return handOwner !== 'Comp' ? (
     <div
       className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : styles.unselected}`}
       onClick={handleSelectInternal}
@@ -55,7 +55,11 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
       <div className={styles.rankBottom}>{rank}</div>
       <div className={styles.suitBottom}>{getSuitIcon(suit)}</div>
     </div>
+  ) : (
+    <div className={styles.cardBack}>
+      <div className={styles.backPattern}></div>
+    </div>
   );
-}
+};
 
 export default Card;
