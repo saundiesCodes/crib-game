@@ -41,19 +41,23 @@ function Hand({cards}) {
     }
   }, [cribCardsSelected])
 
-    return (
-    <div className={styles.hand}>
-      {cards.map((card, index) => (
-        <Card key={index} 
-        suit={card.suit} 
-        rank={card.rank} 
-        handleSelectExternal={handleSelectedCardExternal}
-        selectedLimitReached={selectedLimitReached}
-        handOwner={card.handOwner}
-        />
-      ))}
+  return (
+    <div className={styles.container}>
+      <div className={styles.hand}>
+        {cards.map((card, index) => (
+          <Card 
+            key={index}
+            suit={card.suit} 
+            rank={card.rank} 
+            handleSelectExternal={handleSelectedCardExternal}
+            selectedLimitReached={selectedLimitReached}
+            handOwner={card.handOwner}
+          />
+        ))}
+      </div>
+      {selectedLimitReached && <button className={styles.button}>Discard to Crib</button>}
     </div>
-    );
+  );
   }
 
   export default Hand;

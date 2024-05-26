@@ -1,7 +1,16 @@
+.container {
+  display: flex; /* Use flexbox for row layout */
+  align-items: center; /* Vertically center items */
+}
+
 .hand {
-    display: flex; /* Use flexbox for row layout */
-    flex-direction: row; /* Ensure elements are aligned horizontally */
-    justify-content: flex-start; /* Align items to the start of the row */
-    align-items: center; /* Vertically center items in the row */
-    gap: 10px; /* Optional: space between cards */
-  }
+  display: flex; /* Use flexbox for row layout */
+  flex-direction: row; /* Ensure elements are aligned horizontally */
+  justify-content: flex-start; /* Align items to the start of the row */
+  align-items: center; /* Vertically center items in the row */
+  gap: 10px; /* Optional: space between cards */
+}
+
+.button {
+  margin-left: 40px; /* Optional: add some space between the cards and the button */
+}
