@@ -8,6 +8,7 @@ function Deck() {
     const [compHand, setCompHand] = useState([]);
     const [hasBeenDealt, setHasBeenDealt] = useState(false);
     const [cutCard, setCutCard] = useState({});
+    const [cribCards, setCribCards] = useState([]);
 
     const FACEVALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -25,6 +26,10 @@ function Deck() {
             default: 
                 return parseInt(faceValue);
         }
+    }
+
+    const handleDiscardCribCards = cards => { 
+        setCribCards(prevCribCards => [...prevCribCards, ...cards]);
     }
     
 
@@ -87,10 +92,26 @@ function Deck() {
        return deck[cutIndex];
        
     }
+
+    function getRandomIndex(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+    useEffect(() => {
+        console.log(cribCards)
+        if(cribCards.length === 2){ 
+            const pHandSansCrib = playerHand.filter(item1 => {
+                return !cribCards.some(item2 => item1.rank === item2.rank && item1.suit === item2.suit);
+            });
+            
+            console.log(pHandSansCrib);
+            setPlayerHand(pHandSansCrib);
+        }
+    }, [cribCards]);
     return (
         <div className={styles.deckContainer}>
             <div className={styles.compHand}>
-                <Hand cards={compHand} />
+                <Hand cards={compHand} handleDiscardCribCards={handleDiscardCribCards} />
             </div>
             {!hasBeenDealt && 
             <div className={styles.buttonContainer}>
@@ -103,7 +124,7 @@ function Deck() {
                 </div>
             }
             <div className={styles.playerHand}>
-                <Hand cards={playerHand} />
+                <Hand cards={playerHand} handleDiscardCribCards={handleDiscardCribCards}/>
             </div>
         </div>
     );

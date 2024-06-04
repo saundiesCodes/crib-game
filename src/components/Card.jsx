@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from './Card.module.css';
 
-function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, handOwner }) {
-  const [selected, setSelected] = useState(false);
+function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected }) {
+  const [selected, setSelected] = useState(isSelected);
+
+  useEffect(() => {
+    setSelected(isSelected);
+  }, [isSelected]);
 
   function getSuitIcon(suit) {
     switch (suit) {
       case 'spades':
-        return '♠'; // Description or action for Spades
+        return '♠';
       case 'hearts':
         return '♥';
       case 'diamonds':
@@ -15,32 +19,27 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
       case 'clubs':
         return '♣';
       default:
-        return 'Unknown suit'; // Fallback for unknown cases
+        return 'Unknown suit';
     }
   }
 
-  // useEffect(() => {
-  //   console.log(selectLimitReached)
-  // }, [selectLimitReached]);
-
   const handleSelectInternal = () => {
+    if (handOwner === 'Player' && !cribCardsDiscarded) {
+      const card = {
+        rank,
+        value,
+        suit
+      };
 
-    if(handOwner === 'Player'){
-    const card = {
-      rank,
-      value,
-      suit
-    }
+      if (!selectedLimitReached && !selected) {
+        setSelected(true);
+        handleSelectExternal(card);
+      }
 
-    if(!selectedLimitReached && !selected){
-      setSelected(true);
-      handleSelectExternal(card);
-    }
-
-    if((!selectedLimitReached && selected) || (selectedLimitReached && selected)){ 
-      setSelected(false);
-      handleSelectExternal(card);
-    }
+      if ((!selectedLimitReached && selected) || (selectedLimitReached && selected)) {
+        setSelected(false);
+        handleSelectExternal(card);
+      }
     }
   };
 
