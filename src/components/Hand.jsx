@@ -50,7 +50,7 @@ function Hand({ cards, handleDiscardCribCards }) {
     } else {
       setSelectedLimitReached(false);
     }
-  }, [cribCardsSelected]);
+  }, [cribCardsSelected, cribCardsDiscarded, selectedLimitReached]);
 
   return (
     <div className={styles.container}>
@@ -60,6 +60,7 @@ function Hand({ cards, handleDiscardCribCards }) {
             key={index}
             suit={card.suit}
             rank={card.rank}
+            value={card.value}
             handleSelectExternal={handleSelectedCardExternal}
             selectedLimitReached={selectedLimitReached}
             handOwner={card.handOwner}

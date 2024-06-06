@@ -93,20 +93,39 @@ function Deck() {
        
     }
 
-    function getRandomIndex(max) {
-        return Math.floor(Math.random() * max);
+    function getCompCribIndexes(max) {
+        let firstIndex;
+        let secondIndex = -1;
+        let indexes = [];
+        
+        firstIndex = Math.floor(Math.random() * max);
+        indexes.push(firstIndex);
+        do {
+            secondIndex = Math.floor(Math.random() * max);
+            console.log(secondIndex);
+          }
+          while (secondIndex === firstIndex);
+        indexes.push(secondIndex);
+        return indexes;
       }
 
     useEffect(() => {
-        console.log(cribCards)
         if(cribCards.length === 2){ 
-            const pHandSansCrib = playerHand.filter(item1 => {
-                return !cribCards.some(item2 => item1.rank === item2.rank && item1.suit === item2.suit);
+            const pHandSansCrib = playerHand.filter(handCard => {
+                return !cribCards.some(cribCard => handCard.rank === cribCard.rank && handCard.suit === cribCard.suit);
             });
-            
+            const cribIndexes = getCompCribIndexes(5);
+            const compCribCards = [compHand[cribIndexes[0]], compHand[cribIndexes[1]]];
+            handleDiscardCribCards(compCribCards);
+            console.log(cribIndexes);
             console.log(pHandSansCrib);
             setPlayerHand(pHandSansCrib);
         }
+        console.log(cribCards);
+        const cHandSansCrib = compHand.filter(handCard => {
+            return !cribCards.some(cribCard => handCard.rank === cribCard.rank && handCard.suit === cribCard.suit);
+        });
+        setCompHand(cHandSansCrib);
     }, [cribCards]);
     return (
         <div className={styles.deckContainer}>

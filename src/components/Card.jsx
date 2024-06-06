@@ -26,9 +26,10 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
   const handleSelectInternal = () => {
     if (handOwner === 'Player' && !cribCardsDiscarded) {
       const card = {
+        suit,
         rank,
         value,
-        suit
+        handOwner
       };
 
       if (!selectedLimitReached && !selected) {
