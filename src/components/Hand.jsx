@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import styles from "./Hand.module.css";
 
-function Hand({ cards, handleDiscardCribCards }) {
+function Hand({ cards, handleDiscardCribCards, handlePlayPileCard }) {
   const [cribCardsSelected, setCribCardsSelected] = useState([]);
+  const [pileCardSelected, setPileCardSelected] = useState([]);
   const [selectedLimitReached, setSelectedLimitReached] = useState(false);
   const [cribCardsDiscarded, setCribCardsDiscarded] = useState(false);
   const [selectedCards, setSelectedCards] = useState([]);
@@ -12,7 +13,7 @@ function Hand({ cards, handleDiscardCribCards }) {
     return card1.rank === card2.rank && card1.suit === card2.suit;
   }
 
-  function handleSelectedCardExternal(card) {
+  function handleSelectedCribCardExternal(card) {
     const arrayCopy = [...cribCardsSelected];
     const arrayHasCard = arrayCopy.some(existingCard => cardsAreEqual(existingCard, card));
     if (!selectedLimitReached && !arrayHasCard) {
@@ -35,6 +36,28 @@ function Hand({ cards, handleDiscardCribCards }) {
     }
   }
 
+  function handleSelectedPileCardExternal(card) {
+    const arrayCopy = [];
+    let arrayHasCard;
+
+    if(selectedCards.length > 0){
+      arrayHasCard = selectedCards.some(existingCard => cardsAreEqual(existingCard, card));
+    }
+
+    if (!selectedLimitReached && !arrayHasCard) {
+      arrayCopy.push(card);
+      setPileCardSelected(arrayCopy);
+      setSelectedCards(arrayCopy);
+      setSelectedLimitReached(true);
+    }
+
+    if (arrayHasCard && selectedLimitReached) {
+      setPileCardSelected([]);
+      setSelectedCards([]);
+      setSelectedLimitReached(false);
+    }
+  }
+
   const discardCardsToCrib = (cards) => {
     handleDiscardCribCards(cards);
     setCribCardsSelected([]);
@@ -43,12 +66,19 @@ function Hand({ cards, handleDiscardCribCards }) {
     setSelectedCards([]);
   };
 
+  const handlePlayPileCardInternal = (card) => {
+    handlePlayPileCard(card);
+    setSelectedLimitReached(false);
+    setSelectedCards([]);
+  };
+
   useEffect(() => {
-    if (cribCardsSelected.length === 2) {
-      console.log(cribCardsSelected);
+    if (!cribCardsDiscarded && cribCardsSelected.length === 2) {
       setSelectedLimitReached(true);
-    } else {
-      setSelectedLimitReached(false);
+    }
+
+    if(cribCardsDiscarded && cribCardsSelected.length === 1){ 
+      setSelectedLimitReached(true);
     }
   }, [cribCardsSelected, cribCardsDiscarded, selectedLimitReached]);
 
@@ -61,7 +91,8 @@ function Hand({ cards, handleDiscardCribCards }) {
             suit={card.suit}
             rank={card.rank}
             value={card.value}
-            handleSelectExternal={handleSelectedCardExternal}
+            handleSelectCribExternal={handleSelectedCribCardExternal}
+            handleSelectPileExternal={handleSelectedPileCardExternal}
             selectedLimitReached={selectedLimitReached}
             handOwner={card.handOwner}
             cribCardsDiscarded={cribCardsDiscarded}
@@ -71,6 +102,9 @@ function Hand({ cards, handleDiscardCribCards }) {
       </div>
       {(selectedLimitReached && !cribCardsDiscarded) && (
         <button onClick={() => discardCardsToCrib(cribCardsSelected)} className={styles.button}>Discard to Crib</button>
+      )}
+      {(selectedLimitReached && cribCardsDiscarded) && (
+        <button onClick={() => handlePlayPileCardInternal(pileCardSelected)} className={styles.button}>Play Card</button>
       )}
     </div>
   );

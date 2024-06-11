@@ -9,6 +9,7 @@ function Deck() {
     const [hasBeenDealt, setHasBeenDealt] = useState(false);
     const [cutCard, setCutCard] = useState({});
     const [cribCards, setCribCards] = useState([]);
+    const [pileCards, setPileCards] = useState([]);
 
     const FACEVALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -30,6 +31,10 @@ function Deck() {
 
     const handleDiscardCribCards = cards => { 
         setCribCards(prevCribCards => [...prevCribCards, ...cards]);
+    }
+
+    const handlePlayPileCard = card => { 
+        setPileCards(prevPileCards => [...prevPileCards, ...card]);
     }
     
 
@@ -127,10 +132,20 @@ function Deck() {
         });
         setCompHand(cHandSansCrib);
     }, [cribCards]);
+
+    useEffect(() => {
+    const newPHand = playerHand.filter(handCard => {
+        return !pileCards.some(pileCard => handCard.rank === pileCard.rank && handCard.suit === pileCard.suit);
+    });
+    setPlayerHand(newPHand);
+    }, [pileCards]);
     return (
         <div className={styles.deckContainer}>
             <div className={styles.compHand}>
-                <Hand cards={compHand} handleDiscardCribCards={handleDiscardCribCards} />
+                <Hand 
+                    cards={compHand} 
+                    handleDiscardCribCards={handleDiscardCribCards} 
+                />
             </div>
             {!hasBeenDealt && 
             <div className={styles.buttonContainer}>
@@ -138,15 +153,30 @@ function Deck() {
             </div>
             }
             {hasBeenDealt && 
-            <   div className={styles.cutCard}>
-                    <Card suit={cutCard.suit} rank={cutCard.rank} />
-                </div>
+            <div className={styles.cutCard}>
+                <Card suit={cutCard.suit} rank={cutCard.rank} value={cutCard.value} />
+                {pileCards.length > 0 && 
+                    pileCards.map(card => (
+                        <Card 
+                            suit={card.suit}
+                            rank={card.rank}
+                            value={card.value}
+                            handOwner={card.handOwner}
+                        />
+                    ))
+                }
+            </div>
             }
             <div className={styles.playerHand}>
-                <Hand cards={playerHand} handleDiscardCribCards={handleDiscardCribCards}/>
+                <Hand 
+                    cards={playerHand} 
+                    handleDiscardCribCards={handleDiscardCribCards}
+                    handlePlayPileCard={handlePlayPileCard}
+                />
             </div>
         </div>
     );
+       
 }
 
   export default Deck;

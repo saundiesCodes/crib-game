@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from './Card.module.css';
 
-function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected }) {
+function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected, handleSelectPileExternal }) {
   const [selected, setSelected] = useState(isSelected);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
     }
   }
 
-  const handleSelectInternal = () => {
+  const handleSelectCribCardInternal = () => {
     if (handOwner === 'Player' && !cribCardsDiscarded) {
       const card = {
         suit,
@@ -34,12 +34,33 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
 
       if (!selectedLimitReached && !selected) {
         setSelected(true);
-        handleSelectExternal(card);
+        handleSelectCribExternal(card);
       }
 
       if ((!selectedLimitReached && selected) || (selectedLimitReached && selected)) {
         setSelected(false);
-        handleSelectExternal(card);
+        handleSelectCribExternal(card);
+      }
+    }
+  };
+
+  const handleSelectPileCardInternal = () => {
+    if (handOwner === 'Player' && cribCardsDiscarded) {
+      const card = {
+        suit,
+        rank,
+        value,
+        handOwner
+      };
+
+      if (!selectedLimitReached && !selected) {
+        setSelected(true);
+        handleSelectPileExternal(card);
+      }
+
+      if ((!selectedLimitReached && selected) || (selectedLimitReached && selected)) {
+        setSelected(false);
+        handleSelectPileExternal(card);
       }
     }
   };
@@ -47,7 +68,7 @@ function Card({ rank, value, suit, handleSelectExternal, selectedLimitReached, h
   return handOwner !== 'Comp' ? (
     <div
       className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : styles.unselected}`}
-      onClick={handleSelectInternal}
+      onClick={!cribCardsDiscarded ? handleSelectCribCardInternal : handleSelectPileCardInternal}
     >
       <div className={styles.rankTop}>{rank}</div>
       <div className={styles.suitTop}>{getSuitIcon(suit)}</div>
