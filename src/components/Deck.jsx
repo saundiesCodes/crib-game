@@ -10,6 +10,7 @@ function Deck() {
     const [cutCard, setCutCard] = useState({});
     const [cribCards, setCribCards] = useState([]);
     const [pileCards, setPileCards] = useState([]);
+    const [playerPlayed, setPlayerPlayed] = useState(false);
 
     const FACEVALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     const VALUES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -34,6 +35,14 @@ function Deck() {
     }
 
     const handlePlayPileCard = card => { 
+        console.log("CARD IN PLAYER PILE CARD", card);
+        setPlayerPlayed(true);
+        setPileCards(prevPileCards => [...prevPileCards, ...card]);
+    }
+
+    const handleCompPlayPileCard = card => { 
+        console.log("CARD IN COMP PILE CARD", card);
+        setPlayerPlayed(false);
         setPileCards(prevPileCards => [...prevPileCards, ...card]);
     }
     
@@ -114,6 +123,11 @@ function Deck() {
         return indexes;
       }
 
+      function getCompPileIndex(max) {
+        const indexNum = Math.floor(Math.random() * max);
+        return indexNum;
+      }
+
     useEffect(() => {
         if(cribCards.length === 2){ 
             const pHandSansCrib = playerHand.filter(handCard => {
@@ -134,11 +148,38 @@ function Deck() {
     }, [cribCards]);
 
     useEffect(() => {
-    const newPHand = playerHand.filter(handCard => {
-        return !pileCards.some(pileCard => handCard.rank === pileCard.rank && handCard.suit === pileCard.suit);
-    });
-    setPlayerHand(newPHand);
+        if(playerPlayed){ 
+            const newPHand = playerHand.filter(handCard => {
+                return !pileCards.some(pileCard => handCard.rank === pileCard.rank && handCard.suit === pileCard.suit);
+            });
+            setPlayerHand(newPHand);
+        } else { 
+            const newCHand= compHand.filter(handCard => {
+                return !pileCards.some(pileCard => handCard.rank === pileCard.rank && handCard.suit === pileCard.suit);
+            });
+            setCompHand(newCHand);
+        }
     }, [pileCards]);
+
+    useEffect(() => {
+        let timer;
+        if (playerPlayed) { 
+            timer = setTimeout(() => {
+                const compPileCard = compHand[getCompPileIndex(compHand.length)];
+                const cpcArray = [];
+                cpcArray.push(compPileCard);
+                handleCompPlayPileCard(cpcArray);
+            }, 1000);
+        }
+
+        // Cleanup function to clear the timeout if the component unmounts
+        return () => {
+            if (timer) {
+                clearTimeout(timer);
+            }
+        };
+    }, [playerPlayed]);
+
     return (
         <div className={styles.deckContainer}>
             <div className={styles.compHand}>
@@ -155,16 +196,20 @@ function Deck() {
             {hasBeenDealt && 
             <div className={styles.cutCard}>
                 <Card suit={cutCard.suit} rank={cutCard.rank} value={cutCard.value} />
+                {/* CHANGE THIS TO A PILE COMPONENT */}
                 {pileCards.length > 0 && 
-                    pileCards.map(card => (
-                        <Card 
-                            suit={card.suit}
-                            rank={card.rank}
-                            value={card.value}
-                            handOwner={card.handOwner}
-                        />
-                    ))
-                }
+    <div className={styles.pileDiv}>
+        {pileCards.map(card => (
+            <Card 
+                suit={card.suit}
+                rank={card.rank}
+                value={card.value}
+                handOwner="Player"
+            />
+        ))}
+    </div>
+}
+
             </div>
             }
             <div className={styles.playerHand}>
