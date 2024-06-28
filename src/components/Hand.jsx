@@ -97,6 +97,7 @@ function Hand({ cards, handleDiscardCribCards, handlePlayPileCard }) {
             handOwner={card.handOwner}
             cribCardsDiscarded={cribCardsDiscarded}
             isSelected={selectedCards.some(selectedCard => cardsAreEqual(selectedCard, card))}
+            faceUp={card.faceUp}
           />
         ))}
       </div>

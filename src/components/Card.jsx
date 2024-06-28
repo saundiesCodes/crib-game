@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from './Card.module.css';
 
-function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected, handleSelectPileExternal }) {
+function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected, handleSelectPileExternal, faceUp }) {
   const [selected, setSelected] = useState(isSelected);
 
   useEffect(() => {
@@ -50,7 +50,8 @@ function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReache
         suit,
         rank,
         value,
-        handOwner
+        handOwner,
+        faceUp
       };
 
       if (!selectedLimitReached && !selected) {
@@ -65,7 +66,7 @@ function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReache
     }
   };
 
-  return handOwner !== 'Comp' ? (
+  return faceUp ? (
     <div
       className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : styles.unselected}`}
       onClick={!cribCardsDiscarded ? handleSelectCribCardInternal : handleSelectPileCardInternal}
