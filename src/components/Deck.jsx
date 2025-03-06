@@ -5,7 +5,9 @@ import styles from "./Deck.module.css"
 
 function Deck() {
     const [playerHand, setPlayerHand] = useState([]);
+    const [originalPlayerHand, setOriginalPlayerHand] = useState([]);
     const [compHand, setCompHand] = useState([]);
+    const [originalCompHand, setOriginalCompHand] = useState([]);
     const [hasBeenDealt, setHasBeenDealt] = useState(false);
     const [cutCard, setCutCard] = useState({});
     const [cribCards, setCribCards] = useState([]);
@@ -91,11 +93,13 @@ function Deck() {
             card.faceUp = false;
             return card;
         });
-
+        setOriginalPlayerHand(updatedpHand);
         setPlayerHand(updatedpHand);
+        setOriginalCompHand(updatedcHand);
         setCompHand(updatedcHand);
         const cut = cutDeck(deck);
         cut.faceUp = true;
+        cut.handOwner = 'Cut';
         setCutCard(cut);
         setHasBeenDealt(true);
     }
@@ -135,12 +139,18 @@ function Deck() {
             const compCribCards = [compHand[cribIndexes[0]], compHand[cribIndexes[1]]];
             handleDiscardCribCards(compCribCards);
             setPlayerHand(pHandSansCrib);
+            setOriginalPlayerHand(pHandSansCrib);
         }
         const cHandSansCrib = compHand.filter(handCard => {
             return !cribCards.some(cribCard => handCard.rank === cribCard.rank && handCard.suit === cribCard.suit);
         });
         setCompHand(cHandSansCrib);
+        setOriginalCompHand(cHandSansCrib);
     }, [cribCards]);
+
+    useEffect(() => {
+        console.log("ORIGINAL PLAYER HAND", originalPlayerHand)
+    }, [originalPlayerHand]);
 
     useEffect(() => {
         if (playerPlayed) {
