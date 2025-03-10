@@ -37,38 +37,46 @@ function countOfAKinds(cards) {
 }
 
 function countingFlushes(cards) {
-    let suitCounts = {}; // Object to track occurrences of each rank
+    let suitCounts = {}; 
     let fiveCardFlushes = 0;
     let fourCardFlushes = 0;
+    const hasCompCard = cards.some(card => card.handOwner === "Comp");
 
-    const playerCards = cards.filter(card => { 
-        return card.handOwner === 'Player'
-    })
-
-    console.log("Player Cards", playerCards);
-
-    playerCards.forEach(card => {
+    cards.forEach(card => {
         suitCounts[card.suit] = (suitCounts[card.suit] || 0) + 1;
     });
 
-    Object.values(suitCounts).forEach(count => {
-        if(count === 4){ 
-            fourCardFlushes += Math.floor(count / 4)
-        } 
-    });
+    if (!hasCompCard) {
+        for (let count of Object.values(suitCounts)) {
+            if (count >= 5) {
+                fiveCardFlushes = 1;
+                break; 
+            }
+        }
+    }
 
-    if(fourCardFlushes > 0){ 
+    if (fiveCardFlushes === 0) {
+        suitCounts = {}; 
+        const playerCards = cards.filter(card => card.handOwner === 'Player' || card.handOwner === 'Comp');
 
-        cards.forEach(card => {
+        playerCards.forEach(card => {
             suitCounts[card.suit] = (suitCounts[card.suit] || 0) + 1;
         });
-    }
-    const flush = { 
-        "Four card flushes": fourCardFlushes
+
+        for (let count of Object.values(suitCounts)) {
+            if (count === 4) {
+                fourCardFlushes = 1;
+                break;
+            }
+        }
     }
 
-    return flush;
+    return { 
+        "Five card flushes": fiveCardFlushes,
+        "Four card flushes": fourCardFlushes
+    };
 }
+
 
 function countFifteenCombinations(cards) {
     const values = cards.map(card => card.value);

@@ -29,7 +29,7 @@ function CardCounter() {
         { suit: "spades", rank: "4", value: 4, handOwner: "Player", faceUp: true },
         { suit: "spades", rank: "3", value: 3, handOwner: "Player", faceUp: true },
         { suit: "spades", rank: "2", value: 2, handOwner: "Player", faceUp: true },
-        { suit: "clubs", rank: "K", value: 10, handOwner: "Cut", faceUp: true }
+        { suit: "spades", rank: "K", value: 10, handOwner: "Cut", faceUp: true }
     ];
 
     cardCounter(cardsFlush); 
