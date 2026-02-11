@@ -1,5 +1,4 @@
 import Deck from "./Deck";
-import CardCounter from "./CardCounter";
 import styles from "./Board.module.css"
 
 // WHERE I LEFT OFF
@@ -7,8 +6,7 @@ import styles from "./Board.module.css"
 
 function Board() {
     return (
-        //     <Deck />
-        <CardCounter />
+        <Deck />
     );
   }
 
