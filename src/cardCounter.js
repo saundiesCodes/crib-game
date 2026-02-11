@@ -1,11 +1,8 @@
 export function cardCounter(cards){ 
-    const counts = countOfAKinds(cards);
-    const fifteens = countFifteenCombinations(cards);
-    const flushes = countingFlushes(cards);
+    const score = scoreHand(cards);
 
-    console.log("COUNTS", counts);
-    console.log("FIFTEENS", fifteens);
-    console.log("FLUSHES", flushes);
+    console.log("SCORE", score);
+    return score;
 }
 
 function countOfAKinds(cards) {
@@ -100,4 +97,103 @@ function countFifteenCombinations(cards) {
     }
 
     return count;
+}
+
+function countRuns(cards) {
+    const ranks = cards.map(card => rankToValue(card.rank));
+    let maxRunLength = 0;
+    let runCount = 0;
+
+    const numSubsets = 1 << ranks.length;
+    for (let i = 0; i < numSubsets; i++) {
+        const subset = [];
+        for (let j = 0; j < ranks.length; j++) {
+            if (i & (1 << j)) {
+                subset.push(ranks[j]);
+            }
+        }
+        if (subset.length < 3) continue;
+
+        subset.sort((a, b) => a - b);
+        let isRun = true;
+        for (let k = 1; k < subset.length; k++) {
+            if (subset[k] !== subset[k - 1] + 1) {
+                isRun = false;
+                break;
+            }
+        }
+        if (!isRun) continue;
+
+        if (subset.length > maxRunLength) {
+            maxRunLength = subset.length;
+            runCount = 1;
+        } else if (subset.length === maxRunLength) {
+            runCount += 1;
+        }
+    }
+
+    const points = maxRunLength >= 3 ? maxRunLength * runCount : 0;
+    return {
+        "runLength": maxRunLength,
+        "runCount": runCount,
+        "points": points
+    };
+}
+
+function countNobs(cards) {
+    const cut = cards.find(card => card.handOwner === "Cut");
+    if (!cut) {
+        return 0;
+    }
+
+    const hasNobs = cards.some(card => (
+        card.handOwner !== "Cut" &&
+        card.rank === "J" &&
+        card.suit === cut.suit
+    ));
+
+    return hasNobs ? 1 : 0;
+}
+
+function rankToValue(rank) {
+    if (typeof rank === "number") return rank;
+    const parsed = parseInt(rank, 10);
+    if (!Number.isNaN(parsed)) return parsed;
+    const map = { "A": 1, "J": 11, "Q": 12, "K": 13 };
+    return map[rank];
+}
+
+export function scoreHand(cards) {
+    const counts = countOfAKinds(cards);
+    const fifteens = countFifteenCombinations(cards);
+    const flushes = countingFlushes(cards);
+    const runs = countRuns(cards);
+    const nobs = countNobs(cards);
+
+    const pairPoints = counts.pairs * 2;
+    const threePoints = counts.threeOfAKind * 6;
+    const fourPoints = counts.fourOfAKind * 12;
+    const fifteenPoints = fifteens * 2;
+    const flushPoints = flushes["Five card flushes"] ? 5 : (flushes["Four card flushes"] ? 4 : 0);
+    const total = pairPoints + threePoints + fourPoints + fifteenPoints + flushPoints + runs.points + nobs;
+
+    return {
+        "pairs": counts.pairs,
+        "threeOfAKind": counts.threeOfAKind,
+        "fourOfAKind": counts.fourOfAKind,
+        "fifteens": fifteens,
+        "runs": runs,
+        "flushes": flushes,
+        "nobs": nobs,
+        "points": {
+            "pairs": pairPoints,
+            "threeOfAKind": threePoints,
+            "fourOfAKind": fourPoints,
+            "fifteens": fifteenPoints,
+            "runs": runs.points,
+            "flushes": flushPoints,
+            "nobs": nobs
+        },
+        "total": total
+    };
 }
