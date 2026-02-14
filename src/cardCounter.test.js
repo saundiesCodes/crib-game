@@ -1,4 +1,4 @@
-import { scoreHand } from "./cardCounter";
+import { scoreHand } from "./game/scoring/handScore";
 
 describe("scoreHand", () => {
     test("scores a hand with only fifteens", () => {

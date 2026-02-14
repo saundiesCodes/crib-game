@@ -1,100 +1,49 @@
-        /* Container for the card */
-        .card {
-            width: 100px; /* Fixed width for uniformity */
-            height: 140px; /* Fixed height for uniformity */
-            border-radius: 10px; /* Rounded corners */
-            border: 2px solid #333; /* Border around the card */
-            background-color: white; /* Card background */
-            position: relative; /* Positioning context for inner elements */
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow for depth */
-        }
+﻿.card {
+  width: 72px;
+  height: 96px;
+  border-radius: 10px;
+  border: 2px solid #1d1d1d;
+  background-color: #f8f4ea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
 
-        /* Positioning the rank (number or letter) in the top-left corner */
-        .card .rankTop {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+.card:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
 
-        /* Positioning the suit in the top-left corner */
-        .card .suitTop {
-            position: absolute;
-            top: 20px;
-            left: 9px;
-            font-size: 16px;
-        }
+.rank {
+  font-size: 18px;
+}
 
-        .card .rankBottom {
-            position: absolute;
-            bottom: 5px; /* Adjust as needed */
-            right: 5px; /* Adjust as needed */
-            font-size: 16px;
-            font-weight: bold;
-            transform: rotate(180deg); /* Flips the text upside down */
-        }
-        
-        /* Positioning the suit in the bottom-right corner and flipping it */
-        .card .suitBottom {
-            position: absolute;
-            bottom: 20px; /* Adjust as needed */
-            right: 9px; /* Adjust as needed */
-            font-size: 16px;
-            transform: rotate(180deg); /* Flips the text upside down */
-        }
+.suit {
+  font-size: 20px;
+}
 
-        /* Positioning the suit in the center of the card */
-        .card .centerSuit {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Center align */
-            font-size: 40px; /* Larger font size for the central suit */
-        }
+.hearts,
+.diamonds {
+  color: #b0162f;
+}
 
-        /* Styling for different suits */
-        .hearts, .diamonds {
-            color: red; /* Hearts and Diamonds are red */
-        }
+.spades,
+.clubs {
+  color: #1d1d1d;
+}
 
-        .spades, .clubs {
-            color: black; /* Spades and Clubs are black */
-        }
+.selected {
+  outline: 3px solid #f5c542;
+  transform: translateY(-6px);
+}
 
-        .selected {
-            background-color: #ccc; /* Gray background to indicate selection */
-            transform: translateY(-10px); /* Move the card slightly above */
-          }
-
-          .unselected {
-            background-color: #ffffff; 
-            transform: translateY(10px); 
-          }
-
-          .cardBack {
-            width: 100px;
-            height: 150px;
-            border-radius: 10px;
-            background: #2e2e2e; /* Dark gray background */
-            border: 2px solid #ffffff; /* White border */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
-            position: relative;
-            overflow: hidden;
-        }
-
-          .cardBack .backPattern {
-            width: 90px; /* Slightly smaller than the card to fit within the border */
-            height: 140px;
-            background: linear-gradient(45deg, #ff0066 25%, transparent 25%),
-                        linear-gradient(-45deg, #ff0066 25%, transparent 25%),
-                        linear-gradient(45deg, transparent 75%, #ff0066 75%),
-                        linear-gradient(-45deg, transparent 75%, #ff0066 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 0, 10px -10px, 0px 10px;
-            border-radius: 8px; /* Match the card's border-radius */
-            padding-bottom: 10px;
-        }
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
