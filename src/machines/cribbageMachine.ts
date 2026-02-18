@@ -1,5 +1,5 @@
 ﻿import { assign, createMachine } from "xstate";
-import { applyEvent, createEmptyGameState, createInitialGameState, isPeggingComplete, scoreHands } from "../game/engine";
+import { applyEvent, createEmptyGameState, createInitialGameState, isPeggingComplete, scoreHands, startNextHand } from "../game/engine";
 import { GameEvent, GameState, Settings } from "../game/types";
 
 export type CribbageContext = {
@@ -33,9 +33,7 @@ export const cribbageMachine = createMachine(
         }
       },
       deal: {
-        on: {
-          DEAL_COMPLETE: "discard"
-        }
+        always: "discard"
       },
       discard: {
         on: {
@@ -70,7 +68,18 @@ export const cribbageMachine = createMachine(
           gameState: scoreHands(context.gameState)
         })),
         on: {
-          SCORE_COMPLETE: "gameOver"
+          SCORE_COMPLETE: [
+            {
+              target: "gameOver",
+              guard: "hasWinner"
+            },
+            {
+              target: "deal",
+              actions: assign(({ context }) => ({
+                gameState: startNextHand(context.gameState, context.settings)
+              }))
+            }
+          ]
         }
       },
       gameOver: {
@@ -87,7 +96,10 @@ export const cribbageMachine = createMachine(
   },
   {
     guards: {
-      peggingComplete: ({ context }) => isPeggingComplete(context.gameState)
+      peggingComplete: ({ context }) => isPeggingComplete(context.gameState),
+      hasWinner: ({ context }) =>
+        context.gameState.scores.player >= context.settings.playTo ||
+        context.gameState.scores.comp >= context.settings.playTo
     }
   }
 );

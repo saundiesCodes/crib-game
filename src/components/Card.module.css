@@ -47,3 +47,43 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.cardBack {
+  width: 72px;
+  height: 96px;
+  border-radius: 10px;
+  border: 2px solid #1d1d1d;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.cardBack::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 8px;
+}
+
+.classic {
+  background: #1f1f1f;
+}
+
+.classic::before {
+  background-image: linear-gradient(45deg, #f04f63 25%, transparent 25%),
+    linear-gradient(-45deg, #f04f63 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f04f63 75%),
+    linear-gradient(-45deg, transparent 75%, #f04f63 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 0, 8px -8px, 0 8px;
+}
+
+.deepBlue {
+  background: #0a2342;
+}
+
+.deepBlue::before {
+  background-image: radial-gradient(circle at 20% 20%, #2e72b6 0 20%, transparent 20%),
+    radial-gradient(circle at 80% 80%, #2e72b6 0 20%, transparent 20%);
+  background-size: 18px 18px;
+}

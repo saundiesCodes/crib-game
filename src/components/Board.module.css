@@ -1,28 +1,88 @@
 ﻿.board {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
   background: radial-gradient(circle at top, #1f6b2d 0%, #0f3c1a 55%, #081d0f 100%);
   color: #f8f4ea;
-}
-
-.phase {
   display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.35);
-  padding: 24px;
-  border-radius: 18px;
+  flex-direction: column;
 }
 
-.column {
+.table {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 24px;
+  padding: 24px;
+}
+
+.topArea,
+.bottomArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.centerArea {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  align-items: center;
+  justify-items: center;
+}
+
+.centerColumn {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  align-items: center;
+}
+
+.cutCardBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.centerLabel,
+.playerLabel {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.playerLabel {
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cribBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.2);
+  color: #f5c542;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 24px 24px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .primaryButton,
@@ -45,15 +105,39 @@
   border: 1px solid #f5c542;
 }
 
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 12, 6, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.phaseOverlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.phaseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f8f4ea;
+  min-width: 280px;
+  align-items: center;
+}
+
 .infoBox {
   padding: 8px 12px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.3);
   font-size: 14px;
-}
-
-.buttonRow {
-  display: flex;
-  gap: 12px;
-  align-items: center;
 }

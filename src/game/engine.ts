@@ -33,7 +33,43 @@ export function createEmptyGameState(): GameState {
   };
 }
 
-export function createInitialGameState(settings: Settings = DEFAULT_SETTINGS, rng: () => number = Math.random): GameState {
+export function createInitialGameState(
+  settings: Settings = DEFAULT_SETTINGS,
+  rng: () => number = Math.random
+): GameState {
+  return dealNewHand({
+    settings,
+    rng,
+    dealerId: "player",
+    scores: { player: 0, comp: 0 }
+  });
+}
+
+export function startNextHand(
+  state: GameState,
+  settings: Settings = DEFAULT_SETTINGS,
+  rng: () => number = Math.random
+): GameState {
+  const nextDealer = toggleTurn(state.dealerId);
+  return dealNewHand({
+    settings,
+    rng,
+    dealerId: nextDealer,
+    scores: { ...state.scores }
+  });
+}
+
+function dealNewHand({
+  settings,
+  rng,
+  dealerId,
+  scores
+}: {
+  settings: Settings;
+  rng: () => number;
+  dealerId: PlayerId;
+  scores: { player: number; comp: number };
+}): GameState {
   const deck = shuffleDeck(createDeck(), rng);
   const { playerHand, compHand, remainingDeck } = dealHands(deck);
   const cutCard = remainingDeck.pop() ?? null;
@@ -54,6 +90,8 @@ export function createInitialGameState(settings: Settings = DEFAULT_SETTINGS, rn
     ? { ...cutCard, owner: "cut", handOwner: "Cut", faceUp: true }
     : null;
 
+  const nonDealer: PlayerId = dealerId === "player" ? "comp" : "player";
+
   return {
     deck: remainingDeck,
     players: {
@@ -68,9 +106,9 @@ export function createInitialGameState(settings: Settings = DEFAULT_SETTINGS, rn
       passed: { player: false, comp: false },
       lastPlayer: null
     },
-    scores: { player: 0, comp: 0 },
-    dealerId: "player",
-    turnId: "player",
+    scores,
+    dealerId,
+    turnId: nonDealer,
     phase: "discard",
     discarded: { player: false, comp: false },
     handForScoring: { player: [], comp: [] }
@@ -129,6 +167,7 @@ export function scoreHands(state: GameState): GameState {
 }
 
 function applyDiscard(state: GameState, playerId: PlayerId, cardIds: string[]): GameState {
+  if (state.discarded[playerId]) return state;
   if (!canDiscard(state, playerId, cardIds)) return state;
 
   let nextState = removeCardsToCrib(state, playerId, cardIds);
