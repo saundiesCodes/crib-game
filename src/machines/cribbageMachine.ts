@@ -56,11 +56,11 @@ export const cribbageMachine = createMachine(
             actions: assign(({ event, context }) => ({
               gameState: applyEvent(context.gameState, event as GameEvent)
             }))
+          },
+          PEGGING_ROUND_END: {
+            target: "scoreHands",
+            guard: "peggingComplete"
           }
-        },
-        always: {
-          target: "scoreHands",
-          guard: "peggingComplete"
         }
       },
       scoreHands: {

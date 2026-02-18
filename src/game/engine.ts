@@ -29,7 +29,9 @@ export function createEmptyGameState(): GameState {
     turnId: "player",
     phase: "menu",
     discarded: { player: false, comp: false },
-    handForScoring: { player: [], comp: [] }
+    handForScoring: { player: [], comp: [] },
+    peggingEventCounter: 0,
+    lastPeggingScore: null
   };
 }
 
@@ -111,7 +113,9 @@ function dealNewHand({
     turnId: nonDealer,
     phase: "discard",
     discarded: { player: false, comp: false },
-    handForScoring: { player: [], comp: [] }
+    handForScoring: { player: [], comp: [] },
+    peggingEventCounter: 0,
+    lastPeggingScore: null
   };
 }
 
@@ -223,7 +227,20 @@ function applyPlayCard(state: GameState, playerId: PlayerId, cardId: string): Ga
   const newCount = state.pile.count + card.value;
   const pileCards = [...state.pile.cards, { ...card, owner: "pile", faceUp: true }];
   const reset = newCount === 31;
-  const peggingPoints = calculatePeggingPoints(pileCards, newCount);
+  const peggingScore = calculatePeggingScore(pileCards, newCount);
+  const otherPlayer = toggleTurn(playerId);
+  const handsEmptyAfterPlay =
+    remaining.length === 0 && state.players[otherPlayer].hand.length === 0;
+  const lastCardPoints = handsEmptyAfterPlay && newCount !== 31 ? 1 : 0;
+  const reasons = lastCardPoints
+    ? [...peggingScore.reasons, { label: "Last card", points: 1 }]
+    : peggingScore.reasons;
+  const totalPeggingPoints = peggingScore.points + lastCardPoints;
+  const hasPeggingPoints = totalPeggingPoints > 0;
+  const nextEventCounter = hasPeggingPoints ? state.peggingEventCounter + 1 : state.peggingEventCounter;
+  const shouldResetPile = reset || handsEmptyAfterPlay;
+  const snapshotCards = shouldResetPile ? pileCards.map((pileCard) => ({ ...pileCard })) : undefined;
+  const snapshotCount = shouldResetPile ? newCount : undefined;
 
   return {
     ...state,
@@ -231,7 +248,7 @@ function applyPlayCard(state: GameState, playerId: PlayerId, cardId: string): Ga
       ...state.players,
       [playerId]: { hand: remaining }
     },
-    pile: reset
+    pile: shouldResetPile
       ? { cards: [], count: 0, passed: { player: false, comp: false }, lastPlayer: null }
       : {
           cards: pileCards,
@@ -241,8 +258,19 @@ function applyPlayCard(state: GameState, playerId: PlayerId, cardId: string): Ga
         },
     scores: {
       ...state.scores,
-      [playerId]: state.scores[playerId] + peggingPoints
+      [playerId]: state.scores[playerId] + totalPeggingPoints
     },
+    peggingEventCounter: nextEventCounter,
+    lastPeggingScore: hasPeggingPoints
+      ? {
+          id: nextEventCounter,
+          playerId,
+          points: totalPeggingPoints,
+          text: describePeggingScore(reasons),
+          pileCards: snapshotCards,
+          pileCount: snapshotCount
+        }
+      : null,
     turnId: toggleTurn(playerId)
   };
 }
@@ -252,6 +280,7 @@ function applyPass(state: GameState, playerId: PlayerId): GameState {
   const bothPassed = passed.player && passed.comp;
   const lastPlayer = state.pile.lastPlayer;
   const shouldAwardGo = bothPassed && state.pile.count > 0 && state.pile.count !== 31 && lastPlayer;
+  const nextEventCounter = shouldAwardGo ? state.peggingEventCounter + 1 : state.peggingEventCounter;
 
   return {
     ...state,
@@ -261,6 +290,11 @@ function applyPass(state: GameState, playerId: PlayerId): GameState {
     scores: shouldAwardGo
       ? { ...state.scores, [lastPlayer]: state.scores[lastPlayer] + 1 }
       : state.scores,
+    peggingEventCounter: nextEventCounter,
+    lastPeggingScore:
+      shouldAwardGo && lastPlayer
+        ? { id: nextEventCounter, playerId: lastPlayer, points: 1, text: "Go for 1" }
+        : null,
     turnId: toggleTurn(playerId)
   };
 }
@@ -269,14 +303,29 @@ function toggleTurn(playerId: PlayerId): PlayerId {
   return playerId === "player" ? "comp" : "player";
 }
 
-function calculatePeggingPoints(pileCards: Card[], count: number): number {
-  let points = 0;
-  if (count === 15) points += 2;
-  if (count === 31) points += 2;
+function calculatePeggingScore(
+  pileCards: Card[],
+  count: number
+): { points: number; reasons: { label: string; points: number }[] } {
+  const reasons: { label: string; points: number }[] = [];
+  if (count === 15) reasons.push({ label: "15", points: 2 });
+  if (count === 31) reasons.push({ label: "31", points: 2 });
 
-  points += scorePairs(pileCards);
-  points += scorePeggingRun(pileCards);
-  return points;
+  const pairPoints = scorePairs(pileCards);
+  if (pairPoints === 2) reasons.push({ label: "Pair", points: 2 });
+  if (pairPoints === 6) reasons.push({ label: "Trips", points: 6 });
+  if (pairPoints === 12) reasons.push({ label: "Quads", points: 12 });
+
+  const runPoints = scorePeggingRun(pileCards);
+  if (runPoints >= 3) reasons.push({ label: `Run of ${runPoints}`, points: runPoints });
+
+  const points = reasons.reduce((total, reason) => total + reason.points, 0);
+  return { points, reasons };
+}
+
+function describePeggingScore(reasons: { label: string; points: number }[]): string {
+  if (reasons.length === 0) return "";
+  return reasons.map((reason) => `${reason.label} for ${reason.points}`).join(" + ");
 }
 
 function scorePairs(pileCards: Card[]): number {

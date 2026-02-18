@@ -10,7 +10,19 @@
 }
 
 .row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: 600;
+  min-height: 22px;
+}
+
+.delta {
+  color: #f5c542;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px rgba(245, 197, 66, 0.35);
 }
 
 .target {

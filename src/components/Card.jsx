@@ -8,14 +8,21 @@ const SUIT_LABELS = {
   clubs: "C"
 };
 
-function Card({ card, onClick, disabled = false, selected = false, backVariant = "classic" }) {
+function Card({
+  card,
+  onClick,
+  disabled = false,
+  selected = false,
+  backVariant = "classic",
+  dimmed = true
+}) {
   const suitLabel = SUIT_LABELS[card.suit] ?? "?";
   const faceUp = card.faceUp !== false;
   const className = [
     styles.card,
     styles[card.suit],
     selected ? styles.selected : "",
-    disabled ? styles.disabled : ""
+    disabled && dimmed ? styles.disabled : ""
   ]
     .filter(Boolean)
     .join(" ");

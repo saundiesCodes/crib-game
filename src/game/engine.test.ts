@@ -38,13 +38,15 @@ describe("pegging scoring", () => {
       },
       players: {
         player: { hand: [makeCard("c1", "5", "hearts", 5, "Player")] },
-        comp: { hand: [] }
+        comp: { hand: [makeCard("cx1", "A", "clubs", 1, "Comp")] }
       }
     };
 
     const next = applyEvent(state, { type: "PLAY_CARD", playerId: "player", cardId: "c1" });
     expect(next.pile.count).toBe(15);
     expect(next.scores.player).toBe(2);
+    expect(next.lastPeggingScore?.text).toBe("15 for 2");
+    expect(next.lastPeggingScore?.playerId).toBe("player");
   });
 
   test("scores pair for pegging", () => {
@@ -58,7 +60,7 @@ describe("pegging scoring", () => {
       },
       players: {
         player: { hand: [makeCard("c1", "5", "hearts", 5, "Player")] },
-        comp: { hand: [] }
+        comp: { hand: [makeCard("cx1", "A", "clubs", 1, "Comp")] }
       }
     };
 
@@ -80,7 +82,7 @@ describe("pegging scoring", () => {
       },
       players: {
         player: { hand: [makeCard("c1", "9", "clubs", 9, "Player")] },
-        comp: { hand: [] }
+        comp: { hand: [makeCard("cx1", "A", "clubs", 1, "Comp")] }
       }
     };
 
@@ -102,6 +104,27 @@ describe("pegging scoring", () => {
     const next = applyEvent(state, { type: "PASS", playerId: "player" });
     expect(next.scores.player).toBe(1);
     expect(next.pile.count).toBe(0);
+    expect(next.lastPeggingScore?.text).toBe("Go for 1");
+  });
+
+  test("awards last card point and emits explanation", () => {
+    const state = {
+      ...baseState(),
+      pile: {
+        cards: [makeCard("p1", "9", "spades", 9, "Player")],
+        count: 9,
+        passed: { player: false, comp: false },
+        lastPlayer: "comp"
+      },
+      players: {
+        player: { hand: [makeCard("c1", "4", "hearts", 4, "Player")] },
+        comp: { hand: [] }
+      }
+    };
+
+    const next = applyEvent(state, { type: "PLAY_CARD", playerId: "player", cardId: "c1" });
+    expect(next.scores.player).toBe(1);
+    expect(next.lastPeggingScore?.text).toBe("Last card for 1");
   });
 });
 
