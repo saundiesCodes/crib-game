@@ -8,8 +8,9 @@ const SUIT_LABELS = {
   clubs: "C"
 };
 
-function Card({ card, onClick, disabled = false, selected = false }) {
+function Card({ card, onClick, disabled = false, selected = false, backVariant = "classic" }) {
   const suitLabel = SUIT_LABELS[card.suit] ?? "?";
+  const faceUp = card.faceUp !== false;
   const className = [
     styles.card,
     styles[card.suit],
@@ -18,6 +19,14 @@ function Card({ card, onClick, disabled = false, selected = false }) {
   ]
     .filter(Boolean)
     .join(" ");
+
+  if (!faceUp) {
+    return (
+      <div className={[styles.cardBack, styles[backVariant]].filter(Boolean).join(" ")}
+        aria-label="Face down card"
+      />
+    );
+  }
 
   return (
     <button
