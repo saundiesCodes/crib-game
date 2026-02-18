@@ -16,7 +16,7 @@ function Pile({ cards, count }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Card card={card} disabled />
+            <Card card={card} disabled dimmed={false} />
           </motion.div>
         ))}
       </div>

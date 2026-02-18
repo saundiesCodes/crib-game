@@ -24,6 +24,15 @@ export type PileState = {
   lastPlayer: PlayerId | null;
 };
 
+export type PeggingScoreEvent = {
+  id: number;
+  playerId: PlayerId;
+  points: number;
+  text: string;
+  pileCards?: Card[];
+  pileCount?: number;
+};
+
 export type GameState = {
   deck: Card[];
   players: Record<PlayerId, PlayerState>;
@@ -36,6 +45,8 @@ export type GameState = {
   phase: Phase;
   discarded: Record<PlayerId, boolean>;
   handForScoring: Record<PlayerId, Card[]>;
+  peggingEventCounter: number;
+  lastPeggingScore: PeggingScoreEvent | null;
 };
 
 export type Settings = {
@@ -68,6 +79,10 @@ export type ScoreCompleteEvent = {
   type: "SCORE_COMPLETE";
 };
 
+export type PeggingRoundEndEvent = {
+  type: "PEGGING_ROUND_END";
+};
+
 export type RestartEvent = {
   type: "RESTART";
 };
@@ -77,5 +92,6 @@ export type GameEvent =
   | DiscardEvent
   | PlayCardEvent
   | PassEvent
+  | PeggingRoundEndEvent
   | ScoreCompleteEvent
   | RestartEvent;
