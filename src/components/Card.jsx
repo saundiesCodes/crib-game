@@ -1,87 +1,51 @@
-import React, { useState, useEffect } from "react";
-import styles from './Card.module.css';
+﻿import React from "react";
+import styles from "./Card.module.css";
 
-function Card({ rank, value, suit, handleSelectCribExternal, selectedLimitReached, handOwner, cribCardsDiscarded, isSelected, handleSelectPileExternal, faceUp }) {
-  const [selected, setSelected] = useState(isSelected);
+const SUIT_LABELS = {
+  spades: "S",
+  hearts: "H",
+  diamonds: "D",
+  clubs: "C"
+};
 
-  useEffect(() => {
-    setSelected(isSelected);
-  }, [isSelected]);
+function Card({
+  card,
+  onClick,
+  disabled = false,
+  selected = false,
+  backVariant = "classic",
+  dimmed = true
+}) {
+  const suitLabel = SUIT_LABELS[card.suit] ?? "?";
+  const faceUp = card.faceUp !== false;
+  const className = [
+    styles.card,
+    styles[card.suit],
+    selected ? styles.selected : "",
+    disabled && dimmed ? styles.disabled : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-  function getSuitIcon(suit) {
-    switch (suit) {
-      case 'spades':
-        return '♠';
-      case 'hearts':
-        return '♥';
-      case 'diamonds':
-        return '♦';
-      case 'clubs':
-        return '♣';
-      default:
-        return 'Unknown suit';
-    }
+  if (!faceUp) {
+    return (
+      <div className={[styles.cardBack, styles[backVariant]].filter(Boolean).join(" ")}
+        aria-label="Face down card"
+      />
+    );
   }
 
-  const handleSelectCribCardInternal = () => {
-    if (handOwner === 'Player' && !cribCardsDiscarded) {
-      const card = {
-        suit,
-        rank,
-        value,
-        handOwner
-      };
-
-      if (!selectedLimitReached && !selected) {
-        setSelected(true);
-        handleSelectCribExternal(card);
-      }
-
-      if ((!selectedLimitReached && selected) || (selectedLimitReached && selected)) {
-        setSelected(false);
-        handleSelectCribExternal(card);
-      }
-    }
-  };
-
-  const handleSelectPileCardInternal = () => {
-    if (handOwner === 'Player' && cribCardsDiscarded) {
-      const card = {
-        suit,
-        rank,
-        value,
-        handOwner,
-        faceUp
-      };
-
-      if (!selectedLimitReached && !selected) {
-        setSelected(true);
-        handleSelectPileExternal(card);
-      }
-
-      if ((!selectedLimitReached && selected) || (selectedLimitReached && selected)) {
-        setSelected(false);
-        handleSelectPileExternal(card);
-      }
-    }
-  };
-
-  return faceUp ? (
-    <div
-      className={`${styles.card} ${styles[suit]} ${selected ? styles.selected : styles.unselected}`}
-      onClick={!cribCardsDiscarded ? handleSelectCribCardInternal : handleSelectPileCardInternal}
+  return (
+    <button
+      type="button"
+      className={className}
+      onClick={() => onClick?.(card)}
+      disabled={disabled}
     >
-      <div className={styles.rankTop}>{rank}</div>
-      <div className={styles.suitTop}>{getSuitIcon(suit)}</div>
-      <div className={styles.centerSuit}>{getSuitIcon(suit)}</div>
-      <div className={styles.rankBottom}>{rank}</div>
-      <div className={styles.suitBottom}>{getSuitIcon(suit)}</div>
-    </div>
-  ) : (
-    <div className={styles.cardBack}>
-      <div className={styles.backPattern}></div>
-    </div>
+      <div className={styles.rank}>{card.rank}</div>
+      <div className={styles.suit}>{suitLabel}</div>
+    </button>
   );
-};
+}
 
 export default Card;

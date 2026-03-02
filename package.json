@@ -6,9 +6,12 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@xstate/react": "^6.0.0",
+    "framer-motion": "^12.34.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xstate": "^5.26.0"
   },
   "scripts": {
     "dev": "vite",
@@ -35,8 +38,12 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.2",
     "jsdom": "^24.0.0",
+    "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   }

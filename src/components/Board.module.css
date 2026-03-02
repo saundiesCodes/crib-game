@@ -1,12 +1,160 @@
-body {
-    background-color: #135813; /* Dark green color */
-    background-image: 
-        linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.05) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.05) 75%);
-    background-size: 20px 20px;
-    margin: 0; /* Remove default body margin */
-    height: 100vh; /* Make body take up full viewport height */
-    overflow: hidden; /* Prevent scrolling if content overflows */
+﻿.board {
+  height: 100vh;
+  background: radial-gradient(circle at top, #1f6b2d 0%, #0f3c1a 55%, #081d0f 100%);
+  color: #f8f4ea;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.table {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 24px;
+  padding: 24px;
+}
+
+.topArea,
+.bottomArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.playerControlsRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.centerArea {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  align-items: center;
+  justify-items: center;
+}
+
+.centerColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.pileControlsRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cutCardBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.centerLabel,
+.playerLabel {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.playerLabel {
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cribBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.2);
+  color: #f5c542;
+}
+
+.primaryButton,
+.secondaryButton {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: #f5c542;
+  color: #1d1d1d;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #f5c542;
+  border: 1px solid #f5c542;
+}
+
+.secondaryButton:disabled,
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.peggingNotice {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(245, 197, 66, 0.15);
+  border: 1px solid rgba(245, 197, 66, 0.55);
+  color: #f5c542;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 12, 6, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.phaseOverlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.phaseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f8f4ea;
+  min-width: 280px;
+  align-items: center;
+}
+
+.infoBox {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 14px;
 }

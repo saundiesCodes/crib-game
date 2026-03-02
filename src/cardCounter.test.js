@@ -1,4 +1,4 @@
-import { scoreHand } from "./cardCounter";
+import { scoreHand } from "./game/scoring/handScore";
 
 describe("scoreHand", () => {
     test("scores a hand with only fifteens", () => {
@@ -85,6 +85,23 @@ describe("scoreHand", () => {
         ];
 
         const score = scoreHand(cardsNobs);
+        expect(score.nobs).toBe(1);
+    });
+
+    test("scores the maximum 29-point hand", () => {
+        const cardsTwentyNine = [
+            { suit: "hearts", rank: "5", value: 5, handOwner: "Player", faceUp: true },
+            { suit: "diamonds", rank: "5", value: 5, handOwner: "Player", faceUp: true },
+            { suit: "clubs", rank: "5", value: 5, handOwner: "Player", faceUp: true },
+            { suit: "spades", rank: "J", value: 10, handOwner: "Player", faceUp: true },
+            { suit: "spades", rank: "5", value: 5, handOwner: "Cut", faceUp: true }
+        ];
+
+        const score = scoreHand(cardsTwentyNine);
+        expect(score.total).toBe(29);
+        expect(score.fifteens).toBe(8);
+        expect(score.points.fifteens).toBe(16);
+        expect(score.points.fourOfAKind).toBe(12);
         expect(score.nobs).toBe(1);
     });
 });
